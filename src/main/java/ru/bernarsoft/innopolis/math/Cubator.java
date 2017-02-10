@@ -7,17 +7,18 @@ import java.util.ArrayList;
 
 public class Cubator implements Runnable {
 
-    private ArrayList<Integer> list = new ArrayList<Integer>();
-    private int cube;
+    private final ArrayList<Integer> list;
+    private final Consumer consumer;
 
-    public Cubator(ArrayList list) {
+    public Cubator(ArrayList list, Consumer consumer) {
         this.list = list;
+        this.consumer = consumer;
     }
 
     public void run() {
-        for(int i = 0; i < list.size(); i++ ) {
-            cube += ( list.get(i)*list.get(i)*list.get(i));
+        for (Integer i : list) {
+            int cube = (i * i * i);
+                consumer.printMessege(cube, 0, 0);
         }
-        Consumer.printMessege(cube, 0, 0);
     }
 }

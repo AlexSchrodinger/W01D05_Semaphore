@@ -1,37 +1,42 @@
 package ru.bernarsoft.innopolis;
 
 
+import ru.bernarsoft.innopolis.consumers.Consumer;
 import ru.bernarsoft.innopolis.math.Cubator;
+import ru.bernarsoft.innopolis.math.Kvadrator;
+import ru.bernarsoft.innopolis.math.Prostator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        ArrayList<Integer> chisla1 = new ArrayList<Integer>();
+        ArrayList<Integer> chisla = new ArrayList<Integer>();
+        Collections.addAll(chisla, 1, 2, 3, 4, 5);
 
-        chisla1.add(1);
-        chisla1.add(2);
-        chisla1.add(3);
-        chisla1.add(4);
-
-        ArrayList<Integer> chisla2 = new ArrayList<Integer>();
-
-        chisla2.add(5);
-        chisla2.add(6);
-        chisla2.add(7);
-        chisla2.add(8);
+        Consumer consumer = new Consumer();
 
 
+        Thread[] threads = new Thread[6];
+        threads[0] = new Thread(new Cubator(chisla, consumer));
+        threads[1] = new Thread(new Cubator(chisla, consumer));
+        threads[2] = new Thread(new Kvadrator(chisla, consumer));
+        threads[3] = new Thread(new Kvadrator(chisla, consumer));
+        threads[4] = new Thread(new Prostator(chisla, consumer));
+        threads[5] = new Thread(new Prostator(chisla, consumer));
 
-        Thread thread1 = new Thread(new Cubator(chisla1));
-        Thread thread2 = new Thread(new Cubator(chisla2));
+        for (Thread th:threads) {
+            th.start();
+        }
 
-        thread1.start();
-        thread2.start();
+        for (Thread th:threads) {
+            th.join();
+        }
 
+        System.out.println("Result: " + consumer.getSum());
 
     }
 }
